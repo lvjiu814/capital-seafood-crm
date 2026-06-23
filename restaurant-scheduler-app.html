@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capital Seafood CRM系统V1</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --panel-2: #eef4ee;
+      --ink: #202621;
+      --muted: #697166;
+      --line: #dfe5dc;
+      --line-strong: #c5d0c0;
+      --green: #28724c;
+      --green-2: #e4f2e9;
+      --gold: #e9b949;
+      --gold-2: #fff4cf;
+      --blue: #315f8f;
+      --blue-2: #e8f0f9;
+      --red: #b94646;
+      --red-2: #f9e8e8;
+      --shadow: 0 18px 42px rgba(31, 41, 35, 0.08);
+      --radius: 8px;
+      font-family: Inter, "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 7px;
+      min-height: 36px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--line-strong); }
+    button.primary { background: var(--green); border-color: var(--green); color: #fff; }
+    button.icon { width: 36px; padding: 0; display: inline-grid; place-items: center; }
+    button.danger { color: var(--red); }
+
+    input, select, textarea {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      min-height: 36px;
+      padding: 7px 10px;
+      width: 100%;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #14251c;
+      color: #f7fbf7;
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 760;
+      letter-spacing: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--gold);
+      display: grid;
+      place-items: center;
+      color: #14251c;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      justify-content: flex-start;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      background: transparent;
+      border-color: transparent;
+      color: #c9d6ca;
+      padding: 9px 10px;
+      min-height: 40px;
+    }
+
+    .nav button.active {
+      color: #14251c;
+      background: #f4f7f1;
+      border-color: #f4f7f1;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      color: #aebcaf;
+      font-size: 12px;
+      line-height: 1.6;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 16px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .date-filter {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: auto minmax(130px, 170px) minmax(130px, 170px) minmax(0, 1fr);
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field-label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .range-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      align-self: center;
+      justify-self: end;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      min-width: 0;
+    }
+
+    .panel-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .panel-body { padding: 16px; }
+
+    .week-tools {
+      display: grid;
+      grid-template-columns: 150px auto auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .schedule-wrap {
+      overflow: auto;
+      max-width: 100%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .schedule {
+      min-width: 920px;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f2f5ef;
+      text-align: left;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .day-head {
+      background: var(--gold);
+      color: #162016;
+      text-align: center;
+    }
+
+    .employee-cell {
+      width: 124px;
+      background: #fbfcfa;
+      position: sticky;
+      left: 0;
+      z-index: 2;
+    }
+
+    .employee-name {
+      font-weight: 760;
+      margin-bottom: 8px;
+    }
+
+    .mini-row {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .shift-cell {
+      height: 78px;
+      background: #fff;
+    }
+
+    .shift-card {
+      display: grid;
+      gap: 7px;
+      min-height: 62px;
+    }
+
+    .shift-view {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+      align-items: start;
+    }
+
+    .shift-main {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .shift-detail {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .edit-link {
+      min-height: 28px;
+      padding: 0 8px;
+      font-size: 12px;
+      color: var(--green);
+      border-color: var(--line);
+      background: #fbfdfb;
+    }
+
+    .blank-shift {
+      min-height: 26px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      border-radius: 999px;
+      padding: 0 9px;
+      font-size: 12px;
+      font-weight: 760;
+      width: max-content;
+    }
+
+    .status.full { background: var(--green-2); color: var(--green); }
+    .status.part { background: var(--blue-2); color: var(--blue); }
+    .status.off { background: #f2f2ee; color: #80867d; }
+    .status.changed { background: var(--red-2); color: var(--red); }
+
+    .cell-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      background: #f8faf7;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px;
+    }
+
+    .cell-controls select,
+    .cell-controls input {
+      min-height: 30px;
+      padding: 4px 6px;
+      font-size: 12px;
+    }
+
+    .actual {
+      grid-column: span 2;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .metric:last-child { border-bottom: 0; }
+    .metric-label { color: var(--muted); font-size: 13px; }
+    .metric-value { font-size: 20px; font-weight: 800; }
+
+    .voice-box {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .tabs {
+      display: inline-flex;
+      gap: 4px;
+      background: #edf2ed;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .tabs button {
+      border: 0;
+      background: transparent;
+      min-height: 30px;
+      padding: 0 10px;
+      font-size: 13px;
+    }
+
+    .tabs button.active {
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(20, 37, 28, 0.08);
+    }
+
+    .hidden { display: none !important; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-grid .wide { grid-column: span 2; }
+
+    .sales-layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .sales-main {
+      display: grid;
+      gap: 16px;
+    }
+
+    .subtabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .subtabs button.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .sales-table th,
+    .sales-table td {
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .staff-table input {
+      min-width: 160px;
+    }
+
+    .chart {
+      display: grid;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr) 92px;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .bar-track {
+      height: 14px;
+      background: #edf1ed;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--green);
+      border-radius: 999px;
+      width: 0%;
+      transition: width .2s ease;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      background: #f8faf7;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: sticky; top: 0; z-index: 10; flex-direction: row; align-items: center; }
+      .nav { grid-auto-flow: column; overflow-x: auto; }
+      .sidebar-note { display: none; }
+      .grid, .sales-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { padding: 14px; }
+      .topbar { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; }
+      .week-tools, .form-grid, .split { grid-template-columns: 1fr; }
+      .form-grid .wide { grid-column: auto; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">C</div><span>Capital Seafood<br />CRM系统V1</span></div>
+      <nav class="nav" aria-label="主导航">
+        <button class="active" data-view="schedule">排班表</button>
+        <button data-view="staff">人员管理</button>
+        <button data-view="hours">工时统计</button>
+        <button data-view="sales">业绩报表</button>
+      </nav>
+      <div class="sidebar-note">数据保存在当前浏览器。第一版适合门店内部试用，后续可升级为多人登录和云端同步。</div>
+    </aside>
+
+    <main>
+      <section class="topbar">
+        <div>
+          <h1 id="pageTitle">Capital Seafood CRM系统V1</h1>
+          <div class="subtitle" id="pageSubtitle">按员工和日期安排全天或兼职班次，并记录实际工作时长。</div>
+        </div>
+        <div class="actions">
+          <button id="exportBtn">导出数据</button>
+          <button class="primary" id="saveBtn">保存当前版本</button>
+        </div>
+      </section>
+
+      <section class="date-filter">
+        <label class="field-label">查看方式
+          <select id="rangeModeSelect">
+            <option value="day">日</option>
+            <option value="week">周</option>
+            <option value="month">月</option>
+            <option value="custom">自定义</option>
+          </select>
+        </label>
+        <label class="field-label">开始日期<input type="date" id="rangeStart" /></label>
+        <label class="field-label">结束日期<input type="date" id="rangeEnd" /></label>
+        <div class="range-note" id="rangeNote"></div>
+      </section>
+
+      <section id="scheduleView" class="view">
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h2 class="panel-title" id="scheduleTitle">周排班</h2>
+              <div class="week-tools">
+                <button id="currentWeekSchedule">周排班</button>
+                <button id="nextWeekSchedule">下周排班</button>
+                <button id="editSchedule">编辑排班</button>
+                <button class="primary hidden" id="saveScheduleEdit">保存排班</button>
+                <button id="copyWeek">复制上周</button>
+              </div>
+            </div>
+            <div class="schedule-wrap">
+              <table class="schedule" id="scheduleTable"></table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="staffView" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">人员管理</h2>
+            <div class="week-tools" style="grid-template-columns: 1fr auto;">
+              <input id="newEmployee" placeholder="新增员工姓名" />
+              <button id="addEmployee">添加人员</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="staffList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="hoursView" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">工时统计</h2>
+            <div class="hint" id="hoursRangeLabel"></div>
+          </div>
+          <div class="panel-body">
+            <div id="monthStats"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="salesView" class="view hidden">
+        <div class="sales-layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h2 class="panel-title">录入当天业绩</h2>
+            </div>
+            <div class="panel-body">
+              <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+                <label>日期<input type="date" id="salesDate" /></label>
+                <label>营业额<input type="number" id="grossSales" step="0.01" /></label>
+                <label>折扣<input type="number" id="discounts" step="0.01" /></label>
+                <label>净销售<input type="number" id="netSales" step="0.01" /></label>
+                <label>税额<input type="number" id="taxAmount" step="0.01" /></label>
+                <label>含税合计<input type="number" id="grandTotal" step="0.01" /></label>
+                <label>小费<input type="number" id="tips" step="0.01" /></label>
+                <label>总收入<input type="number" id="salesRevenue" step="0.01" /></label>
+                <label>延期销售<input type="number" id="deferredSales" step="0.01" /></label>
+                <label>总金额<input type="number" id="totalAmount" step="0.01" /></label>
+                <label>已结订单<input type="number" id="closedOrders" /></label>
+                <label>未结订单<input type="number" id="openOrders" /></label>
+                <label>取消订单<input type="number" id="canceledOrders" /></label>
+                <label>作废金额<input type="number" id="voidAmount" step="0.01" /></label>
+                <label>作废数量<input type="number" id="voidItemCount" /></label>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:12px;">
+                <button class="primary" id="addSales">保存业绩</button>
+                <button id="sampleSales">填入图片示例</button>
+                <button id="importReportSamples">导入3张报表</button>
+              </div>
+              <p class="hint">已支持小票里的营业额、折扣、净销售、税额、小费、业绩收入、延期销售、总金额、订单和作废字段。</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2 class="panel-title">业绩查看</h2>
+              <div class="subtabs">
+                <button class="active" data-sales-panel="detail">业绩明细</button>
+                <button data-sales-panel="summary">业绩汇总</button>
+                <button data-sales-panel="analysis">业绩分析</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="sales-main">
+                <section id="salesDetailPanel">
+                  <div id="salesDetailSummary"></div>
+                  <div style="overflow:auto; margin-top:14px;">
+                    <table class="sales-table" id="salesTable"></table>
+                  </div>
+                </section>
+                <section id="salesSummaryPanel" class="hidden">
+                  <div id="salesSummary"></div>
+                </section>
+                <section id="salesAnalysisPanel" class="hidden">
+                  <div class="form-grid" style="grid-template-columns: minmax(180px, 260px) minmax(0, 1fr); margin-bottom: 12px;">
+                    <label>对比项目
+                      <select id="analysisMetric">
+                        <option value="netSales">净销售</option>
+                        <option value="tips">小费</option>
+                        <option value="grossSales">营业额</option>
+                        <option value="salesRevenue">业绩收入</option>
+                        <option value="totalAmount">总金额</option>
+                        <option value="closedOrders">已结订单</option>
+                        <option value="voidAmount">作废金额</option>
+                      </select>
+                    </label>
+                    <label>分析维度
+                      <select id="pivotDimension">
+                        <option value="day">按日期</option>
+                        <option value="weekday">按星期</option>
+                        <option value="week">按周</option>
+                        <option value="month">按月</option>
+                      </select>
+                    </label>
+                    <div class="hint">透视表会按选择的维度汇总当前范围，并和上一周期做同期对比。</div>
+                  </div>
+                  <div class="chart" id="salesChart"></div>
+                  <div style="overflow:auto; margin-top:14px;">
+                    <table class="sales-table" id="pivotTable"></table>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const dayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+    const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+    const shiftOptions = [
+      { value: "off", label: "休息", hours: 0 },
+      { value: "full", label: "全天", hours: 8 },
+      { value: "11-3", label: "11-3", hours: 4 },
+      { value: "11-4", label: "11-4", hours: 5 },
+      { value: "4-close", label: "4-close", hours: 5 },
+      { value: "custom", label: "自定义", hours: 0 }
+    ];
+
+    const defaultEmployees = ["Bruce", "Henry", "Nana", "Roy", "Alin", "Megan", "Nia"];
+    const storeKey = "restaurant-scheduler-v1";
+    const reportSamples = [
+      {
+        id: "receipt-2026-06-17",
+        date: "2026-06-17",
+        grossSales: "2481.50",
+        discounts: "0",
+        netSales: "2481.50",
+        taxAmount: "192.46",
+        grandTotal: "2673.96",
+        tips: "401.37",
+        serviceTips: "401.37",
+        deliveryTips: "0",
+        salesRevenue: "3075.33",
+        deferredSales: "0",
+        totalAmount: "3075.33",
+        closedOrders: "28",
+        openOrders: "3",
+        canceledOrders: "1",
+        voidAmount: "0",
+        voidItemCount: "0",
+        source: "图片 1"
+      },
+      {
+        id: "receipt-2026-06-18",
+        date: "2026-06-18",
+        grossSales: "2180.43",
+        discounts: "-95.62",
+        netSales: "2084.81",
+        taxAmount: "161.67",
+        grandTotal: "2246.48",
+        tips: "206.28",
+        serviceTips: "206.28",
+        deliveryTips: "0",
+        salesRevenue: "2452.76",
+        deferredSales: "400.00",
+        totalAmount: "2852.76",
+        closedOrders: "26",
+        openOrders: "6",
+        canceledOrders: "0",
+        voidAmount: "30.88",
+        voidItemCount: "1",
+        source: "图片 2"
+      },
+      {
+        id: "receipt-2026-06-19",
+        date: "2026-06-19",
+        grossSales: "11761.70",
+        discounts: "-64.76",
+        netSales: "11696.94",
+        taxAmount: "906.89",
+        grandTotal: "12603.83",
+        tips: "2021.28",
+        serviceTips: "2021.28",
+        deliveryTips: "0",
+        salesRevenue: "14625.11",
+        deferredSales: "0",
+        totalAmount: "14625.11",
+        closedOrders: "85",
+        openOrders: "2",
+        canceledOrders: "0",
+        voidAmount: "0",
+        voidItemCount: "0",
+        source: "图片 3"
+      }
+    ];
+
+    const startOfWeek = (date) => {
+      const d = new Date(date);
+      const day = d.getDay() || 7;
+      d.setDate(d.getDate() - day + 1);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    };
+
+    const appToday = () => {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    };
+    const weekEnd = (date) => {
+      const d = new Date(date);
+      d.setDate(d.getDate() + 6);
+      return d;
+    };
+    const iso = (date) => date.toISOString().slice(0, 10);
+    const money = (n) => "$" + Number(n || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const num = (n) => Number(n || 0);
+
+    const createEmptyWeek = () => {
+      const employees = defaultEmployees.map((name) => ({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        name,
+        shifts: Object.fromEntries(dayKeys.map((key) => [key, { type: "off", custom: "", actual: "" }]))
+      }));
+      employees[0].shifts.mon.type = "full";
+      employees[0].shifts.wed.type = "full";
+      employees[0].shifts.fri.type = "full";
+      employees[0].shifts.sat.type = "full";
+      employees[0].shifts.sun.type = "full";
+      employees[1].shifts.mon.type = "full";
+      employees[1].shifts.wed.type = "full";
+      employees[1].shifts.thu.type = "full";
+      employees[1].shifts.fri.type = "full";
+      employees[1].shifts.sat.type = "4-close";
+      employees[1].shifts.sun.type = "full";
+      employees[2].shifts.tue.type = "full";
+      employees[2].shifts.wed.type = "full";
+      employees[2].shifts.thu.type = "full";
+      employees[2].shifts.fri.type = "11-4";
+      employees[2].shifts.sun.type = "full";
+      employees[3].shifts.tue.type = "full";
+      employees[3].shifts.sat.type = "full";
+      employees[4].shifts.mon.type = "11-3";
+      employees[4].shifts.tue.type = "11-3";
+      employees[4].shifts.thu.type = "11-3";
+      employees[4].shifts.sat.type = "11-3";
+      employees[4].shifts.sun.type = "11-3";
+      employees[5].shifts.fri.type = "full";
+      employees[5].shifts.sat.type = "full";
+      employees[5].shifts.sun.type = "full";
+      employees[6].shifts.sat.type = "full";
+      employees[6].shifts.sun.type = "full";
+      return employees;
+    };
+
+    const createBlankWeek = () => defaultEmployees.map((name) => ({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+      name,
+      shifts: Object.fromEntries(dayKeys.map((key) => [key, { type: "off", custom: "", actual: "" }]))
+    }));
+
+    const createPaperScheduleWeek = () => {
+      const employees = createBlankWeek();
+      const byName = Object.fromEntries(employees.map((emp) => [emp.name, emp]));
+      const set = (name, day, type) => {
+        if (byName[name]) byName[name].shifts[day].type = type;
+      };
+      set("Bruce", "mon", "full");
+      set("Bruce", "wed", "full");
+      set("Bruce", "fri", "full");
+      set("Bruce", "sat", "full");
+      set("Bruce", "sun", "full");
+
+      set("Henry", "mon", "full");
+      set("Henry", "wed", "full");
+      set("Henry", "thu", "full");
+      set("Henry", "fri", "full");
+      set("Henry", "sat", "4-close");
+      set("Henry", "sun", "full");
+
+      set("Nana", "tue", "full");
+      set("Nana", "wed", "full");
+      set("Nana", "thu", "full");
+      set("Nana", "fri", "11-4");
+      set("Nana", "sun", "full");
+
+      set("Roy", "tue", "full");
+      set("Roy", "sat", "full");
+
+      set("Alin", "mon", "11-3");
+      set("Alin", "tue", "11-3");
+      set("Alin", "thu", "11-3");
+      set("Alin", "sat", "11-3");
+      set("Alin", "sun", "11-3");
+
+      set("Megan", "fri", "full");
+      set("Megan", "sat", "full");
+      set("Megan", "sun", "full");
+
+      set("Nia", "sat", "full");
+      set("Nia", "sun", "full");
+      return employees;
+    };
+
+    const state = JSON.parse(localStorage.getItem(storeKey) || "null") || {
+      currentWeek: iso(startOfWeek(appToday())),
+      selectedDate: iso(appToday()),
+      rangeStart: iso(startOfWeek(appToday())),
+      rangeEnd: iso(weekEnd(startOfWeek(appToday()))),
+      rangeMode: "week",
+      dateLogicVersion: 7,
+      schedules: {},
+      sales: []
+    };
+
+    if (state.dateLogicVersion !== 7) {
+      const todayWeekDate = startOfWeek(appToday());
+      const todayWeek = iso(todayWeekDate);
+      state.rangeMode = "week";
+      state.rangeStart = todayWeek;
+      state.rangeEnd = iso(weekEnd(todayWeekDate));
+      state.selectedDate = todayWeek;
+      state.currentWeek = todayWeek;
+      state.schedules[todayWeek] = createPaperScheduleWeek();
+      state.dateLogicVersion = 7;
+    }
+
+    state.selectedDate = state.selectedDate || state.currentWeek || iso(new Date());
+    state.rangeStart = state.rangeStart || state.selectedDate;
+    state.rangeEnd = state.rangeEnd || state.selectedDate;
+    state.rangeMode = state.rangeMode || "week";
+    state.currentWeek = iso(startOfWeek(state.selectedDate));
+
+    if (!state.schedules[state.currentWeek]) {
+      state.schedules[state.currentWeek] = createBlankWeek();
+    }
+
+    let scheduleEditing = false;
+
+    const save = () => localStorage.setItem(storeKey, JSON.stringify(state));
+    const toDate = (value) => new Date(value + "T00:00:00");
+    const addDays = (value, days) => {
+      const d = typeof value === "string" ? toDate(value) : new Date(value);
+      d.setDate(d.getDate() + days);
+      return d;
+    };
+    const setCurrentWeekRange = () => {
+      const start = startOfWeek(appToday());
+      state.rangeMode = "week";
+      state.rangeStart = iso(start);
+      state.rangeEnd = iso(weekEnd(start));
+      state.selectedDate = state.rangeStart;
+      state.currentWeek = state.rangeStart;
+      if (!state.schedules[state.currentWeek]) state.schedules[state.currentWeek] = createBlankWeek();
+    };
+    const selectedDateObj = () => toDate(state.selectedDate);
+    const activeWeekStart = () => iso(startOfWeek(state.rangeStart || state.selectedDate));
+    const activeDayIndex = (date = state.selectedDate) => {
+      const day = toDate(date).getDay() || 7;
+      return day - 1;
+    };
+    const syncRangeToMode = () => {
+      const base = state.rangeStart || state.selectedDate;
+      if (state.rangeMode === "day") {
+        state.rangeEnd = base;
+      }
+      if (state.rangeMode === "week") {
+        const start = startOfWeek(base);
+        state.rangeStart = iso(start);
+        state.rangeEnd = iso(addDays(start, 6));
+      }
+      if (state.rangeMode === "month") {
+        const d = toDate(base);
+        const start = new Date(d.getFullYear(), d.getMonth(), 1);
+        const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        state.rangeStart = iso(start);
+        state.rangeEnd = iso(end);
+      }
+      state.selectedDate = state.rangeStart;
+      state.currentWeek = iso(startOfWeek(state.rangeStart));
+    };
+    const dateItems = () => {
+      const start = toDate(state.rangeStart);
+      const end = toDate(state.rangeEnd);
+      const items = [];
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const date = iso(d);
+        const dayIndex = activeDayIndex(date);
+        items.push({ date, dayKey: dayKeys[dayIndex], dayName: dayNames[dayIndex] });
+      }
+      return items;
+    };
+    const rangeLabel = () => {
+      const start = toDate(state.rangeStart);
+      const end = toDate(state.rangeEnd);
+      if (state.rangeStart === state.rangeEnd) return `${start.getMonth() + 1}/${start.getDate()} ${dayNames[activeDayIndex(state.rangeStart)]}`;
+      return `${start.getMonth() + 1}/${start.getDate()} - ${end.getMonth() + 1}/${end.getDate()}`;
+    };
+    const recordsInRange = (records) => {
+      const start = toDate(state.rangeStart);
+      const end = toDate(state.rangeEnd);
+      return records.filter((row) => {
+        if (!row.date) return false;
+        const d = toDate(row.date);
+        return d >= start && d <= end;
+      });
+    };
+    const salesInRange = () => recordsInRange(state.sales || []);
+    const previousRangeSales = () => {
+      const start = toDate(state.rangeStart);
+      const end = toDate(state.rangeEnd);
+      const days = Math.round((end - start) / 86400000) + 1;
+      const prevStart = addDays(start, -days);
+      const prevEnd = addDays(end, -days);
+      return state.sales.filter((row) => {
+        if (!row.date) return false;
+        const d = toDate(row.date);
+        return d >= prevStart && d <= prevEnd;
+      });
+    };
+    const importReportSamples = () => {
+      state.sales = state.sales || [];
+      reportSamples.forEach((sample) => {
+        state.sales = state.sales.filter((row) => row.date !== sample.date);
+        state.sales.push({ ...sample });
+      });
+      state.sales.sort((a, b) => a.date.localeCompare(b.date));
+      save();
+    };
+    const currentEmployees = () => state.schedules[state.currentWeek] || [];
+    const weekKeyForDate = (date) => iso(startOfWeek(date));
+    const ensureWeek = (weekKey) => {
+      if (!state.schedules[weekKey]) state.schedules[weekKey] = createBlankWeek();
+      return state.schedules[weekKey];
+    };
+    const employeeForDate = (baseEmp, date) => {
+      const week = ensureWeek(weekKeyForDate(date));
+      let emp = week.find((item) => item.id === baseEmp.id) || week.find((item) => item.name === baseEmp.name);
+      if (!emp) {
+        emp = {
+          id: baseEmp.id,
+          name: baseEmp.name,
+          shifts: Object.fromEntries(dayKeys.map((key) => [key, { type: "off", custom: "", actual: "" }]))
+        };
+        week.push(emp);
+      }
+      return emp;
+    };
+    const shiftForDate = (baseEmp, item) => employeeForDate(baseEmp, item.date).shifts[item.dayKey];
+    const shiftMeta = (type) => shiftOptions.find((s) => s.value === type) || shiftOptions[0];
+    const plannedHours = (shift = { type: "off" }) => shift.type === "custom" ? num(shift.custom) : shiftMeta(shift.type).hours;
+    const actualHours = (shift = { type: "off", actual: "" }) => shift.actual === "" ? plannedHours(shift) : num(shift.actual);
+    const cellKey = (empId, dayKey) => `${empId}:${dayKey}`;
+    const displayShift = (shift) => {
+      const planned = plannedHours(shift);
+      const actual = actualHours(shift);
+      const changed = shift.actual !== "" && actual !== planned;
+      if (shift.type === "off") return { main: "", detail: "", changed };
+      if (shift.type === "full" && !changed) return { main: "全天", detail: `${planned}小时`, changed };
+      const main = `${actual}小时`;
+      const detail = changed ? `原计划 ${planned}小时，实际 ${actual}小时` : shiftMeta(shift.type).label;
+      return { main, detail, changed };
+    };
+    const salesMetricLabels = {
+      grossSales: "营业额",
+      discounts: "折扣",
+      netSales: "净销售",
+      taxAmount: "税额",
+      grandTotal: "含税合计",
+      tips: "小费",
+      salesRevenue: "业绩收入",
+      deferredSales: "延期销售",
+      totalAmount: "总金额",
+      closedOrders: "已结订单",
+      openOrders: "未结订单",
+      voidAmount: "作废金额"
+    };
+    const summarizeSales = (sales) => sales.reduce((acc, row) => {
+      Object.keys(salesMetricLabels).forEach((key) => acc[key] = (acc[key] || 0) + num(row[key]));
+      return acc;
+    }, {});
+    const metricValue = (row, key) => num(row[key]);
+    const formatMetric = (value, key) => key.includes("Orders") ? String(value || 0) : money(value);
+    const weekNumber = (date) => {
+      const d = toDate(date);
+      const yearStart = new Date(d.getFullYear(), 0, 1);
+      return Math.ceil((((d - yearStart) / 86400000) + yearStart.getDay() + 1) / 7);
+    };
+    const pivotKey = (row, dimension) => {
+      if (dimension === "weekday") return dayNames[activeDayIndex(row.date)];
+      if (dimension === "week") return `${toDate(row.date).getFullYear()} 第${weekNumber(row.date)}周`;
+      if (dimension === "month") return row.date.slice(0, 7);
+      return row.date;
+    };
+    const buildPivotRows = (current, previous, dimension, metric) => {
+      const rows = new Map();
+      const add = (label, side, value) => {
+        if (!rows.has(label)) rows.set(label, { label, current: 0, previous: 0 });
+        rows.get(label)[side] += value;
+      };
+      current.forEach((row) => add(pivotKey(row, dimension), "current", metricValue(row, metric)));
+      previous.forEach((row) => add(pivotKey(row, dimension), "previous", metricValue(row, metric)));
+      return [...rows.values()].sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    };
+
+    const rangeModeSelect = document.getElementById("rangeModeSelect");
+    const rangeStartInput = document.getElementById("rangeStart");
+    const rangeEndInput = document.getElementById("rangeEnd");
+    importReportSamples();
+    setCurrentWeekRange();
+    rangeModeSelect.value = state.rangeMode;
+    rangeStartInput.value = state.rangeStart;
+    rangeEndInput.value = state.rangeEnd;
+    document.getElementById("salesDate").value = iso(new Date());
+
+    function renderSchedule() {
+      state.currentWeek = weekKeyForDate(state.rangeStart);
+      if (!state.schedules[state.currentWeek]) state.schedules[state.currentWeek] = createBlankWeek();
+      rangeModeSelect.value = state.rangeMode;
+      rangeStartInput.value = state.rangeStart;
+      rangeEndInput.value = state.rangeEnd;
+      const realWeekStart = iso(startOfWeek(appToday()));
+      const realWeekEnd = iso(weekEnd(startOfWeek(appToday())));
+      document.getElementById("rangeNote").textContent = `当前范围：${rangeLabel()}；真实本周：${realWeekStart} 至 ${realWeekEnd}`;
+      document.getElementById("editSchedule").classList.toggle("hidden", scheduleEditing);
+      document.getElementById("saveScheduleEdit").classList.toggle("hidden", !scheduleEditing);
+      const visibleDates = dateItems();
+      const table = document.getElementById("scheduleTable");
+      const thisWeek = iso(startOfWeek(appToday()));
+      const nextWeek = iso(addDays(startOfWeek(appToday()), 7));
+      const scheduleName = state.rangeMode === "week" && state.rangeStart === nextWeek ? "下周排班" : state.rangeMode === "week" && state.rangeStart === thisWeek ? "周排班" : "排班表";
+      document.getElementById("scheduleTitle").textContent = scheduleEditing ? `编辑${scheduleName}` : scheduleName;
+      const head = `<thead><tr><th class="employee-cell">员工</th>${visibleDates.map((item) => {
+        const d = toDate(item.date);
+        return `<th class="day-head">${item.dayName}<br>${d.getMonth() + 1}/${d.getDate()}</th>`;
+      }).join("")}</tr></thead>`;
+
+      const body = currentEmployees().map((emp) => {
+        const cells = visibleDates.map((item) => {
+          const targetEmp = employeeForDate(emp, item.date);
+          const shift = targetEmp.shifts[item.dayKey] || { type: "off", custom: "", actual: "" };
+          const display = displayShift(shift);
+          const statusClass = display.changed ? "changed" : shift.type === "full" ? "full" : shift.type === "off" ? "off" : "part";
+          return `<td class="shift-cell">
+            <div class="shift-card">
+              ${scheduleEditing ? `
+              <span class="status ${statusClass}">${shift.type === "off" ? "添加班次" : "编辑班次"}</span>
+              <div class="cell-controls">
+                <select data-action="shift" data-emp="${targetEmp.id}" data-date="${item.date}" data-day="${item.dayKey}">
+                  ${shiftOptions.map((opt) => `<option value="${opt.value}" ${opt.value === shift.type ? "selected" : ""}>${opt.label}</option>`).join("")}
+                </select>
+                <input data-action="custom" data-emp="${targetEmp.id}" data-date="${item.date}" data-day="${item.dayKey}" type="number" min="0" step="0.5" value="${shift.custom || ""}" placeholder="计划小时" />
+                <input class="actual" data-action="actual" data-emp="${targetEmp.id}" data-date="${item.date}" data-day="${item.dayKey}" type="number" min="0" step="0.5" value="${shift.actual || ""}" placeholder="实际小时，空=按计划" />
+              </div>
+              ` : `
+              <div class="shift-view">
+                <div>
+                  <div class="shift-main ${display.main ? "" : "blank-shift"}">${display.main}</div>
+                  ${display.detail ? `<div class="shift-detail">${display.detail}</div>` : ""}
+                </div>
+              </div>
+              `}
+            </div>
+          </td>`;
+        }).join("");
+        return `<tr>
+          <td class="employee-cell">
+            <div class="employee-name">${emp.name}</div>
+          </td>${cells}</tr>`;
+      }).join("");
+
+      table.innerHTML = head + `<tbody>${body}</tbody>`;
+      renderWeekSummary();
+      renderStaffList();
+      save();
+    }
+
+    function renderWeekSummary() {
+      const employees = currentEmployees();
+      const items = dateItems();
+      const planned = employees.reduce((sum, emp) => sum + items.reduce((s, item) => s + plannedHours(shiftForDate(emp, item)), 0), 0);
+      const actual = employees.reduce((sum, emp) => sum + items.reduce((s, item) => s + actualHours(shiftForDate(emp, item)), 0), 0);
+      const workingDays = items.map((item) => employees.filter((emp) => plannedHours(shiftForDate(emp, item)) > 0).length);
+      const busiest = workingDays.reduce((best, count, i) => count > best.count ? { count, i } : best, { count: 0, i: 0 });
+      const busiestDay = items[busiest.i] ? items[busiest.i].dayName : "";
+      const target = document.getElementById("weekSummary");
+      if (!target) return;
+      target.innerHTML = `
+        <div class="metric"><span class="metric-label">计划工时</span><span class="metric-value">${planned}</span></div>
+        <div class="metric"><span class="metric-label">实际工时</span><span class="metric-value">${actual}</span></div>
+        <div class="metric"><span class="metric-label">员工人数</span><span class="metric-value">${employees.length}</span></div>
+        <div class="metric"><span class="metric-label">最多人上班</span><span class="metric-value">${busiestDay} ${busiest.count}人</span></div>
+      `;
+    }
+
+    function renderStaffList() {
+      const employees = currentEmployees();
+      document.getElementById("staffList").innerHTML = employees.length ? `
+        <table class="staff-table">
+          <thead><tr><th>员工姓名</th><th>本周计划工时</th><th>操作</th></tr></thead>
+          <tbody>${employees.map((emp) => {
+            const total = dayKeys.reduce((sum, key) => sum + plannedHours(emp.shifts[key]), 0);
+            return `<tr>
+              <td><input data-staff-name="${emp.id}" value="${emp.name}" /></td>
+              <td>${total}</td>
+              <td><button class="danger" data-staff-remove="${emp.id}">删除</button></td>
+            </tr>`;
+          }).join("")}</tbody>
+        </table>
+      ` : `<div class="empty">当前排班还没有员工。可以在上方添加。</div>`;
+    }
+
+    function renderMonthStats() {
+      const rows = {};
+      const items = dateItems();
+      currentEmployees().forEach((emp) => {
+        if (!rows[emp.name]) rows[emp.name] = { planned: 0, actual: 0, changed: 0 };
+        items.forEach((item) => {
+          const shift = shiftForDate(emp, item);
+          const planned = plannedHours(shift);
+          const actual = actualHours(shift);
+          rows[emp.name].planned += planned;
+          rows[emp.name].actual += actual;
+          if (shift.actual !== "" && actual !== planned) rows[emp.name].changed += 1;
+        });
+      });
+
+      const names = Object.keys(rows);
+      document.getElementById("hoursRangeLabel").textContent = `当前范围：${rangeLabel()}`;
+      document.getElementById("monthStats").innerHTML = names.length ? `
+        <table>
+          <thead><tr><th>员工</th><th>计划工时</th><th>实际工时</th><th>差异</th><th>修改次数</th></tr></thead>
+          <tbody>${names.map((name) => {
+            const r = rows[name];
+            return `<tr><td>${name}</td><td>${r.planned}</td><td>${r.actual}</td><td>${r.actual - r.planned}</td><td>${r.changed}</td></tr>`;
+          }).join("")}</tbody>
+        </table>
+      ` : `<div class="empty">这个月份还没有排班记录。你可以在排班表中切换周并保存。</div>`;
+    }
+
+    function getShiftFromText(text) {
+      const lower = text.toLowerCase();
+      if (text.includes("休") || lower.includes("off")) return "off";
+      if (text.includes("全天") || text.includes("全日") || lower.includes("work")) return "full";
+      if (lower.includes("4-close") || lower.includes("4 close") || text.includes("4到关门")) return "4-close";
+      if (text.includes("11-4") || text.includes("11到4")) return "11-4";
+      if (text.includes("11-3") || text.includes("11到3")) return "11-3";
+      return null;
+    }
+
+    function applyNaturalCommand(raw) {
+      const text = raw.replaceAll("星期", "周").replaceAll("礼拜", "周");
+      const clauses = text.split(/[，,。；;\n]+/).map((item) => item.trim()).filter(Boolean);
+      const employees = currentEmployees();
+      let updates = 0;
+      clauses.forEach((clause) => {
+        employees.forEach((emp) => {
+          if (!clause.toLowerCase().includes(emp.name.toLowerCase())) return;
+          dayNames.forEach((day, i) => {
+            if (!clause.includes(day) && !clause.includes(day.replace("周", ""))) return;
+            const shift = getShiftFromText(clause);
+            if (shift) {
+              emp.shifts[dayKeys[i]].type = shift;
+              emp.shifts[dayKeys[i]].actual = "";
+              updates += 1;
+            }
+          });
+        });
+      });
+      renderSchedule();
+      alert(updates ? `已更新 ${updates} 个班次` : "没有识别到可更新的班次，请试试：Bruce 周一全天");
+    }
+
+    function renderSales() {
+      const sales = [...salesInRange()].sort((a, b) => a.date.localeCompare(b.date));
+      const total = summarizeSales(sales);
+
+      document.getElementById("salesDetailSummary").innerHTML = sales.length ? `
+        <div class="hint" style="margin-bottom:10px;">明细范围：${rangeLabel()}</div>
+      ` : `<div class="empty">这个日期范围还没有业绩记录。可以点击“导入3张报表”，或手动录入当天小票。</div>`;
+
+      document.getElementById("salesSummary").innerHTML = sales.length ? `
+        <div class="hint" style="margin-bottom:10px;">汇总范围：${rangeLabel()}</div>
+        <div class="summary-list" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+          <div class="metric"><span class="metric-label">业绩收入</span><span class="metric-value">${money(total.salesRevenue)}</span></div>
+          <div class="metric"><span class="metric-label">总金额</span><span class="metric-value">${money(total.totalAmount || total.salesRevenue)}</span></div>
+          <div class="metric"><span class="metric-label">营业额</span><span class="metric-value">${money(total.grossSales)}</span></div>
+          <div class="metric"><span class="metric-label">净销售</span><span class="metric-value">${money(total.netSales)}</span></div>
+          <div class="metric"><span class="metric-label">税额</span><span class="metric-value">${money(total.taxAmount)}</span></div>
+          <div class="metric"><span class="metric-label">小费</span><span class="metric-value">${money(total.tips)}</span></div>
+          <div class="metric"><span class="metric-label">已结订单</span><span class="metric-value">${total.closedOrders || 0}</span></div>
+          <div class="metric"><span class="metric-label">未结订单</span><span class="metric-value">${total.openOrders || 0}</span></div>
+          <div class="metric"><span class="metric-label">延期销售</span><span class="metric-value">${money(total.deferredSales)}</span></div>
+          <div class="metric"><span class="metric-label">作废金额</span><span class="metric-value">${money(total.voidAmount)}</span></div>
+        </div>
+      ` : `<div class="empty">这个日期范围还没有业绩记录。可以点击“导入3张报表”，或手动录入当天小票。</div>`;
+
+      const metric = document.getElementById("analysisMetric").value;
+      const dimension = document.getElementById("pivotDimension").value;
+      const previous = previousRangeSales();
+      const pivotRows = buildPivotRows(sales, previous, dimension, metric);
+      const max = Math.max(...pivotRows.map((row) => Math.max(row.current, row.previous)), 1);
+      document.getElementById("salesChart").innerHTML = pivotRows.length ? pivotRows.map((row) => {
+        const diff = row.current - row.previous;
+        return `
+        <div class="bar-row">
+          <span>${row.label}</span>
+          <div>
+            <div class="bar-track"><div class="bar" style="width:${Math.max(3, row.current / max * 100)}%"></div></div>
+            <div class="bar-track" style="margin-top:4px;"><div class="bar" style="background: var(--gold); width:${Math.max(3, row.previous / max * 100)}%"></div></div>
+          </div>
+          <strong style="color:${diff >= 0 ? "var(--green)" : "var(--red)"}">${formatMetric(diff, metric)}</strong>
+        </div>
+      `}).join("") + `<div class="hint">绿色为当前范围，黄色为上一周期。当前项目：${salesMetricLabels[metric]}</div>` : `<div class="empty">没有可分析的数据。</div>`;
+
+      document.getElementById("pivotTable").innerHTML = pivotRows.length ? `
+        <thead><tr><th>维度</th><th>当前范围</th><th>上一周期</th><th>差额</th><th>变化</th></tr></thead>
+        <tbody>${pivotRows.map((row) => {
+          const diff = row.current - row.previous;
+          const pct = row.previous ? `${(diff / row.previous * 100).toFixed(1)}%` : "-";
+          return `<tr>
+            <td>${row.label}</td>
+            <td>${formatMetric(row.current, metric)}</td>
+            <td>${formatMetric(row.previous, metric)}</td>
+            <td style="color:${diff >= 0 ? "var(--green)" : "var(--red)"}">${formatMetric(diff, metric)}</td>
+            <td>${pct}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      ` : "";
+
+      document.getElementById("salesTable").innerHTML = `
+        <thead><tr><th>日期</th><th>营业额</th><th>折扣</th><th>净销售</th><th>税额</th><th>含税合计</th><th>小费</th><th>业绩收入</th><th>延期销售</th><th>总金额</th><th>已结订单</th><th>未结订单</th><th>取消订单</th><th>作废金额</th><th>作废数量</th><th></th></tr></thead>
+        <tbody>${sales.map((s, i) => {
+          return `<tr>
+            <td>${s.date}</td><td>${money(s.grossSales)}</td><td>${money(s.discounts)}</td><td>${money(s.netSales)}</td><td>${money(s.taxAmount)}</td><td>${money(s.grandTotal)}</td><td>${money(s.tips)}</td><td>${money(s.salesRevenue)}</td><td>${money(s.deferredSales)}</td><td>${money(s.totalAmount || s.salesRevenue)}</td><td>${s.closedOrders || 0}</td><td>${s.openOrders || 0}</td><td>${s.canceledOrders || 0}</td><td>${money(s.voidAmount)}</td><td>${s.voidItemCount || 0}</td>
+            <td><button class="danger" data-sales-remove="${s.id}">删除</button></td>
+          </tr>`;
+        }).join("")}</tbody>`;
+    }
+
+    document.getElementById("scheduleTable").addEventListener("change", (event) => {
+      const target = event.target;
+      const action = target.dataset.action;
+      if (!action) return;
+      const week = ensureWeek(weekKeyForDate(target.dataset.date || state.rangeStart));
+      const emp = week.find((item) => item.id === target.dataset.emp);
+      if (!emp) return;
+      const shift = emp.shifts[target.dataset.day];
+      if (action === "shift") shift.type = target.value;
+      if (action === "custom") shift.custom = target.value;
+      if (action === "actual") shift.actual = target.value;
+      save();
+    });
+
+    document.getElementById("addEmployee").addEventListener("click", () => {
+      const input = document.getElementById("newEmployee");
+      const name = input.value.trim();
+      if (!name) return;
+      currentEmployees().push({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        name,
+        shifts: Object.fromEntries(dayKeys.map((key) => [key, { type: "off", custom: "", actual: "" }]))
+      });
+      input.value = "";
+      renderSchedule();
+    });
+
+    document.getElementById("staffList").addEventListener("change", (event) => {
+      const input = event.target.closest("[data-staff-name]");
+      if (!input) return;
+      const emp = currentEmployees().find((item) => item.id === input.dataset.staffName);
+      if (emp) emp.name = input.value.trim() || emp.name;
+      renderSchedule();
+    });
+
+    document.getElementById("staffList").addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-staff-remove]");
+      if (!btn) return;
+      state.schedules[state.currentWeek] = currentEmployees().filter((emp) => emp.id !== btn.dataset.staffRemove);
+      renderSchedule();
+    });
+
+    rangeModeSelect.addEventListener("change", () => {
+      state.rangeMode = rangeModeSelect.value;
+      if (state.rangeMode === "week") {
+        setCurrentWeekRange();
+        scheduleEditing = false;
+        renderSchedule();
+        renderMonthStats();
+        renderSales();
+        return;
+      }
+      state.rangeStart = rangeStartInput.value || state.rangeStart;
+      syncRangeToMode();
+      if (!state.schedules[state.currentWeek]) state.schedules[state.currentWeek] = createBlankWeek();
+      renderSchedule();
+      renderMonthStats();
+      renderSales();
+    });
+
+    rangeStartInput.addEventListener("change", () => {
+      state.rangeStart = rangeStartInput.value;
+      if (state.rangeMode !== "custom") syncRangeToMode();
+      if (state.rangeMode === "custom" && (!state.rangeEnd || toDate(state.rangeEnd) < toDate(state.rangeStart))) state.rangeEnd = state.rangeStart;
+      renderSchedule();
+      renderMonthStats();
+      renderSales();
+    });
+
+    rangeEndInput.addEventListener("change", () => {
+      state.rangeEnd = rangeEndInput.value;
+      state.rangeMode = "custom";
+      if (toDate(state.rangeEnd) < toDate(state.rangeStart)) state.rangeStart = state.rangeEnd;
+      renderSchedule();
+      renderMonthStats();
+      renderSales();
+    });
+
+    document.getElementById("currentWeekSchedule").addEventListener("click", () => {
+      setCurrentWeekRange();
+      scheduleEditing = false;
+      renderSchedule();
+      renderMonthStats();
+      renderSales();
+    });
+
+    document.getElementById("nextWeekSchedule").addEventListener("click", () => {
+      const start = addDays(startOfWeek(appToday()), 7);
+      state.rangeMode = "week";
+      state.rangeStart = iso(start);
+      state.rangeEnd = iso(addDays(start, 6));
+      state.selectedDate = state.rangeStart;
+      state.currentWeek = weekKeyForDate(state.rangeStart);
+      ensureWeek(state.currentWeek);
+      scheduleEditing = true;
+      renderSchedule();
+      renderMonthStats();
+      renderSales();
+    });
+
+    document.getElementById("editSchedule").addEventListener("click", () => {
+      scheduleEditing = true;
+      renderSchedule();
+    });
+
+    document.getElementById("saveScheduleEdit").addEventListener("click", () => {
+      scheduleEditing = false;
+      save();
+      renderSchedule();
+      renderMonthStats();
+    });
+
+    document.getElementById("copyWeek").addEventListener("click", () => {
+      const current = new Date(state.currentWeek + "T00:00:00");
+      current.setDate(current.getDate() - 7);
+      const prevKey = iso(current);
+      if (state.schedules[prevKey]) {
+        state.schedules[state.currentWeek] = JSON.parse(JSON.stringify(state.schedules[prevKey]));
+        renderSchedule();
+      } else {
+        alert("没有找到上周排班。");
+      }
+    });
+
+    document.querySelectorAll(".nav button").forEach((btn) => btn.addEventListener("click", () => {
+      document.querySelectorAll(".nav button").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".view").forEach((view) => view.classList.add("hidden"));
+      document.getElementById(btn.dataset.view + "View").classList.remove("hidden");
+      if (btn.dataset.view === "schedule") {
+        setCurrentWeekRange();
+        scheduleEditing = false;
+        renderSchedule();
+      }
+      const titles = {
+        schedule: ["Capital Seafood CRM系统V1", "按日期查看周排班或下周排班，支持直接编辑排班。"],
+        staff: ["人员管理", "集中添加、修改或删除员工，排班表保持干净。"],
+        hours: ["工时统计", "按当前选择的日或周统计每位员工的计划与实际工时。"],
+        sales: ["业绩报表", "按当前日期范围查看小票数据，生成周报、月报和趋势对比。"]
+      };
+      document.getElementById("pageTitle").textContent = titles[btn.dataset.view][0];
+      document.getElementById("pageSubtitle").textContent = titles[btn.dataset.view][1];
+      renderMonthStats();
+      renderStaffList();
+      renderSales();
+    }));
+
+    document.getElementById("addSales").addEventListener("click", () => {
+      const row = {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        date: document.getElementById("salesDate").value,
+        grossSales: document.getElementById("grossSales").value,
+        discounts: document.getElementById("discounts").value,
+        netSales: document.getElementById("netSales").value,
+        taxAmount: document.getElementById("taxAmount").value,
+        grandTotal: document.getElementById("grandTotal").value,
+        tips: document.getElementById("tips").value,
+        salesRevenue: document.getElementById("salesRevenue").value,
+        deferredSales: document.getElementById("deferredSales").value,
+        totalAmount: document.getElementById("totalAmount").value,
+        closedOrders: document.getElementById("closedOrders").value,
+        openOrders: document.getElementById("openOrders").value,
+        canceledOrders: document.getElementById("canceledOrders").value,
+        voidAmount: document.getElementById("voidAmount").value,
+        voidItemCount: document.getElementById("voidItemCount").value,
+        source: "手动录入"
+      };
+      state.sales = state.sales.filter((s) => s.date !== row.date);
+      state.sales.push(row);
+      save();
+      renderSales();
+    });
+
+    document.getElementById("sampleSales").addEventListener("click", () => {
+      document.getElementById("salesDate").value = "2026-06-21";
+      document.getElementById("grossSales").value = "17527.98";
+      document.getElementById("discounts").value = "-418.89";
+      document.getElementById("netSales").value = "17109.09";
+      document.getElementById("taxAmount").value = "1326.42";
+      document.getElementById("grandTotal").value = "18435.51";
+      document.getElementById("tips").value = "3461.54";
+      document.getElementById("salesRevenue").value = "21897.05";
+      document.getElementById("deferredSales").value = "0";
+      document.getElementById("totalAmount").value = "21897.05";
+      document.getElementById("closedOrders").value = "107";
+      document.getElementById("openOrders").value = "5";
+      document.getElementById("canceledOrders").value = "1";
+      document.getElementById("voidAmount").value = "0";
+      document.getElementById("voidItemCount").value = "0";
+    });
+
+    document.getElementById("importReportSamples").addEventListener("click", () => {
+      importReportSamples();
+      renderSales();
+      alert("已导入 6/17、6/18、6/19 三张报表。");
+    });
+
+    document.getElementById("salesTable").addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-sales-remove]");
+      if (!btn) return;
+      state.sales = state.sales.filter((s) => s.id !== btn.dataset.salesRemove);
+      save();
+      renderSales();
+    });
+
+    document.querySelectorAll("[data-sales-panel]").forEach((btn) => btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-sales-panel]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("salesDetailPanel").classList.toggle("hidden", btn.dataset.salesPanel !== "detail");
+      document.getElementById("salesSummaryPanel").classList.toggle("hidden", btn.dataset.salesPanel !== "summary");
+      document.getElementById("salesAnalysisPanel").classList.toggle("hidden", btn.dataset.salesPanel !== "analysis");
+      renderSales();
+    }));
+
+    document.getElementById("analysisMetric").addEventListener("change", renderSales);
+    document.getElementById("pivotDimension").addEventListener("change", renderSales);
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      save();
+      alert("已保存到当前浏览器。");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "restaurant-schedule-sales.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    renderSchedule();
+    renderMonthStats();
+    renderSales();
+  </script>
+</body>
+</html>
